@@ -1,3 +1,4 @@
 # Reverb Simulation
 
-Data Driven Reverb Plugin Creator
+Data Driven Reverb Simulator
+
