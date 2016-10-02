@@ -14,9 +14,15 @@ import sys
 import pdb
 import time
 import scipy.io.wavfile
+import scipy.signal
+import numpy
 from util import *
 
 START_TIME=time.time()
+
+def convert_hertz(freq, sample_rate=44100.0):
+    # convert frequency in hz to units of pi rad/sample
+    return freq * 2.0 / sample_rate
 
 def usage(): 
     # Sample Usage: python main.py input.wav ./results -denoising_sigma 2
@@ -33,7 +39,7 @@ def usage():
     print >> sys.stderr, '        We first smooth the data with a Gaussian filter. The default value is 2.0.'
     print >> sys.stderr, ''
     exit(1)
-
+    
 def main():
     if len(sys.argv) < 3:
         usage()
@@ -50,7 +56,22 @@ def main():
     print "    Denoising Sigma:",denoising_sigma
     print 
     
-    sample_rate, samples = scipy.io.wavfile.read(input_wav_location)
+    input_sample_rate, input_samples = scipy.io.wavfile.read(input_wav_location)
+    input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
+    output_wav_location = os.path.join(out_dir,"output.wav")
+    
+    n=10
+    b = numpy.ones(n, dtype=numpy.float64)/float(n)
+    a = numpy.zeros(2, dtype=numpy.float64)
+    a[0]=1
+    
+    output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
+    
+    print input_samples[:10]
+    print output_samples[:10]
+    print b
+    
+    scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 

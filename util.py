@@ -12,12 +12,28 @@ import matplotlib
 import matplotlib.pyplot
 import urllib
 import urllib2
+import numpy
+import math
 import re
 
 UNIQUE_IDENTIFIER_COUNTER = 0
 DEBUG=True
 inf = float('inf')
+PI = math.pi
 
+def G(x, sigma):
+    return math.exp(-(x*x)/(2*(sigma*sigma))) / math.sqrt(2*PI*(sigma*sigma));
+
+def get_1D_gaussian_kernal(dim, sigma):
+    
+    kernel = numpy.zeros(shape=(dim,))
+    
+    for x in xrange(dim):
+        weight = G(x+dim, sigma)
+        kernel[dim-x-1] = weight
+    
+    return kernel
+    
 def find_string(head, tail, text_to_search):
     match = re.search('('+head+').*('+tail+')', text_to_search)
     return match.group(0) if match else None
