@@ -60,18 +60,24 @@ def main():
     input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
-    n=10
-    b = numpy.ones(n, dtype=numpy.float64)/float(n)
-    a = numpy.zeros(2, dtype=numpy.float64)
+    bn=1
+    b = numpy.ones(bn, dtype=numpy.float64)/float(bn)
+    an=10000
+    a = numpy.zeros(an, dtype=numpy.float64)
     a[0]=1
+#    a[25:an]=-1/float(an)
+    a[an-1]=-0.5
     
     output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
     
-    print input_samples[:10]
-    print output_samples[:10]
-    print b
+    print input_samples[100:110]
+    print output_samples[100:110]
+    print output_samples[100:110]-input_samples[:10]
     
     scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
+    
+    print 
+    print scipy.signal.lfilter(b, a, [1]+100*[0], axis=0)
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 
