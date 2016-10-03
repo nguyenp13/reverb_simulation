@@ -6,6 +6,7 @@ Data Driven Reverb Simulator
 
 TODO:
     Update usage()
+    Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
 
@@ -61,11 +62,10 @@ def main():
     output_wav_location = os.path.join(out_dir,"output.wav")
     
     bn=1
-    b = numpy.ones(bn, dtype=numpy.float64)/float(bn)
+    b = numpy.ones(bn)/float(bn)
     an=10000
-    a = numpy.zeros(an, dtype=numpy.float64)
+    a = numpy.zeros(an)
     a[0]=1
-#    a[25:an]=-1/float(an)
     a[an-1]=-0.5
     
     output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
