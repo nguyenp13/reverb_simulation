@@ -13,7 +13,6 @@ class Filter(object):
         self.b = b0
     
     def apply(self, input_signal): 
-        print "co coefs", self.b, self.a 
         output_signal = numpy.asarray(scipy.signal.lfilter(self.b, self.a, input_signal, axis=0), dtype=numpy.int16)
         return output_signal
     
@@ -22,7 +21,7 @@ class SignalCombiner(object):
     def __init__(self, list_of_weights0): 
         self.list_of_weights=list_of_weights0
 
-    def apply(self, list_of_input_signals):
+    def apply(self, list_of_input_signals): 
         output_signal = numpy.sum([weight*input_signal for input_signal, weight in zip(list_of_input_signals,self.list_of_weights)], axis=0)
         return output_signal
 
@@ -57,7 +56,25 @@ class FilterNetwork(object):
                     current_input_signal = input_signal
                 else:
                     current_input_signal = unit[SIGNAL_COMBINER_INDEX].apply(output_signals_network[layer_index-1])
-#                print unit[FILTER_INDEX]
+                    if layer_index==1 and unit_index==0:
+                        print unit[SIGNAL_COMBINER_INDEX].list_of_weights
+#                        print numpy.sum([weight*input_signal for input_signal, weight in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)], axis=0)
+#                        print numpy.sum([6*output_signals_network[layer_index-1][0],7*output_signals_network[layer_index-1][1]], axis=0)
+#                        print output_signals_network[layer_index-1]
+#                        print [output_signals_network[layer_index-1][0],output_signals_network[layer_index-1][1]]
+                        def p(i):
+                            print i
+                            return i
+                        [p(e) for e in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)]
+                        print "Code's sum"
+                        print [weight*input_signal for input_signal, weight in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)]
+                        print "Our sum"
+                        print [6.0*output_signals_network[layer_index-1][0],7.0*output_signals_network[layer_index-1][1]]
+#                        exit()
+                        print "Code's input"
+                        print current_input_signal
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
+        print "Code's output"
+        print output_signals_network[1][0]
         return self.final_combiner.apply(output_signals_network[-1])
     
