@@ -18,6 +18,7 @@ import scipy.io.wavfile
 import scipy.signal
 import numpy
 from util import *
+from FilterNetwork import *
 
 START_TIME=time.time()
 
@@ -40,7 +41,7 @@ def usage():
     print >> sys.stderr, '        We first smooth the data with a Gaussian filter. The default value is 2.0.'
     print >> sys.stderr, ''
     exit(1)
-    
+
 def main():
     if len(sys.argv) < 3:
         usage()
@@ -58,26 +59,29 @@ def main():
     print 
     
     input_sample_rate, input_samples = scipy.io.wavfile.read(input_wav_location)
-    input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
+#    input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
-    bn=1
-    b = numpy.ones(bn)/float(bn)
-    an=10000
-    a = numpy.zeros(an)
-    a[0]=1
-    a[an-1]=-0.5
+#    bn=1
+#    b = numpy.ones(bn)/float(bn)
+#    an=10000
+#    a = numpy.zeros(an)
+#    a[0]=1
+#    a[an-1]=-0.5
+#    
+#    output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
+#    
+#    print input_samples[100:110]
+#    print output_samples[100:110]
+#    print output_samples[100:110]-input_samples[:10]
+#    
+#    scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
+#    
+#    print 
+#    print scipy.signal.lfilter(b, a, [1]+100*[0], axis=0)
     
-    output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
-    
-    print input_samples[100:110]
-    print output_samples[100:110]
-    print output_samples[100:110]-input_samples[:10]
-    
-    scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
-    
-    print 
-    print scipy.signal.lfilter(b, a, [1]+100*[0], axis=0)
+    fn = FilterNetwork()
+    print fn.apply(input_samples)
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 
