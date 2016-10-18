@@ -80,8 +80,15 @@ def main():
 #    print 
 #    print scipy.signal.lfilter(b, a, [1]+100*[0], axis=0)
     
-    fn = FilterNetwork()
-    print fn.apply(input_samples)
+    fn = FilterNetwork(num_layers=1, num_units_per_layer=1, num_fir_coefficients=3, num_iir_coefficients=3)
+    output_code = fn.apply(input_samples)
+    output_manual = numpy.asarray(scipy.signal.lfilter(fn.network[0][0][0].b, fn.network[0][0][0].a, input_samples, axis=0), dtype=numpy.int16)
+    
+#    print input_samples
+    print "fn coefs", fn.network[0][0][0].b, fn.network[0][0][0].a
+    print output_code
+    print fn.final_combiner.list_of_weights
+    print fn.final_combiner.list_of_weights[0]*output_manual
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 

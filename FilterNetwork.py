@@ -13,6 +13,7 @@ class Filter(object):
         self.b = b0
     
     def apply(self, input_signal): 
+        print "co coefs", self.b, self.a 
         output_signal = numpy.asarray(scipy.signal.lfilter(self.b, self.a, input_signal, axis=0), dtype=numpy.int16)
         return output_signal
     
@@ -56,6 +57,7 @@ class FilterNetwork(object):
                     current_input_signal = input_signal
                 else:
                     current_input_signal = unit[SIGNAL_COMBINER_INDEX].apply(output_signals_network[layer_index-1])
+#                print unit[FILTER_INDEX]
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
         return self.final_combiner.apply(output_signals_network[-1])
     
