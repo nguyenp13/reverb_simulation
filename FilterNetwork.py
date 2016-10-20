@@ -14,11 +14,6 @@ class Filter(object):
     
     def apply(self, input_signal):
         output_signal = numpy.asarray(scipy.signal.lfilter(self.b, self.a, input_signal, axis=0), dtype=numpy.int16)
-#        print '-'*88
-#        print id(input_signal) 
-#        print input_signal
-#        print output_signal
-#        print '-'*88
         return output_signal
     
 class SignalCombiner(object):
@@ -62,32 +57,12 @@ class FilterNetwork(object):
                 else:
                     current_input_signal = unit[SIGNAL_COMBINER_INDEX].apply(output_signals_network[layer_index-1])
                     if layer_index==1 and unit_index==1:
-#                        print unit[SIGNAL_COMBINER_INDEX].list_of_weights
-#                        print numpy.sum([weight*input_signal for input_signal, weight in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)], axis=0)
-#                        print numpy.sum([6*output_signals_network[layer_index-1][0],7*output_signals_network[layer_index-1][1]], axis=0)
-#                        print output_signals_network[layer_index-1]
-#                        print [output_signals_network[layer_index-1][0],output_signals_network[layer_index-1][1]]
                         def p(i):
                             print i
                             return i
-#                        [p(e) for e in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)]
-#                        print "Code's sum"
-#                        print [weight*input_signal for input_signal, weight in zip(output_signals_network[layer_index-1],unit[SIGNAL_COMBINER_INDEX].list_of_weights)]
-#                        print "Our sum"
-#                        print [6.0*output_signals_network[layer_index-1][0],7.0*output_signals_network[layer_index-1][1]]
-#                        exit()
                         print "Code's Input"
                         print current_input_signal
-#                        print "Code's Input's id"
-#                        print id(current_input_signal)
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
-#                if layer_index==1 and unit_index==0:
-#                    print "Code's output"
-#                    print output_signals_network[layer_index][unit_index]
-##                    print unit[FILTER_INDEX].apply(current_input_signal)
-#                    print "Code's Filter Coefs"
-#                    print unit[FILTER_INDEX].a
-#                    print unit[FILTER_INDEX].b
         print "Code's output"
         print output_signals_network[1][1]
         return self.final_combiner.apply(output_signals_network[-1])

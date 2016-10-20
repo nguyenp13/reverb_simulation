@@ -114,27 +114,7 @@ def main():
     
     l0u0_output = filt(l0u0_b,l0u0_a,input_samples)
     l0u1_output = filt(l0u1_b,l0u1_a,input_samples)
-    x = numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0)
-#    print "Our Input's id"
-#    print id(x)
-#    print "Our Input"
-#    print x
-    l1u0_output = filt(l1u0_b,l1u0_a,x)
-#    print "Our output"
-#    print l1u0_output
-#    print "Out Output 4" # THE FILTERS AREN'T THE SAME ################################################################
-#    print (numpy.asarray(scipy.signal.lfilter(l0u0_b, l0u0_a, x, axis=0), dtype=numpy.int16))
-#    print "Out Output 3"
-#    print numpy.asarray(scipy.signal.lfilter(l1u0_b, l1u0_a, x, axis=0), dtype=numpy.int16)
-#    print "Our Fitler Output"
-#    f=Filter(l1u0_a, l1u0_b)
-#    print f.apply(x)
-#    print "Out Output 2"
-#    print numpy.asarray(scipy.signal.lfilter(l1u0_b, l1u0_a, x, axis=0), dtype=numpy.int16)
-#    print "Our Coefs"
-#    print l1u0_a
-#    print l1u0_b
-#    l1u0_output = filt(l0u0_b,l0u0_a,numpy.sum([weight*input_signal for input_signal, weight in zip([l0u0_output,l0u1_output],[6,7])],axis=0))
+    l1u0_output = filt(l1u0_b,l1u0_a,numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0))
     l1u1_output = filt(l1u1_b,l1u1_a,numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0))
     
     output_code = fn.apply(input_samples)
@@ -145,12 +125,6 @@ def main():
     print numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0)
     print "Our Output"
     print l1u1_output
-#    print input_samples
-#    print "Our input"
-#    print numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0)
-#    print output_code
-#    print fn.final_combiner.list_of_weights
-#    print fn.final_combiner.list_of_weights[0]*output_manual
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 
