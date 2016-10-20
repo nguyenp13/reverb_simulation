@@ -62,9 +62,9 @@ def main():
     output_wav_location = os.path.join(out_dir,"output.wav")
     
     fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
-    print fn.network[1][1][0].b
-    fn.mutate_FIR(1,1)
-    print fn.network[1][1][0].b
+    print fn.network[1][1][0].a
+    fn.mutate_IIR(1,1)
+    print fn.network[1][1][0].a
     
 #    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
