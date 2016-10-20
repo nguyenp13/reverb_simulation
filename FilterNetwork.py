@@ -1,16 +1,35 @@
 #!/usr/bin/python
 
 import scipy.signal
+import numpy
+import math
 from util import *
 
 FILTER_INDEX=0
 SIGNAL_COMBINER_INDEX=1
+
+def get_freq_amplitudes(input_signal, sampling_freq):
+    # Returns a dict where the key is the frequency and the value is the amplitude of all the input signal's composite sinusoids 
+    num_samples = len(input_signal)
+    freq_res = float(sampling_freq) / num_samples
+    nyquist_limit = sampling_freq/2.0 
+    discrete_nyquist_cutoff = int(math.floor(nyquist_limit))
+    FFT = numpy.fft.fft(input_signal)
+    two_sided_magnitudes = numpy.absolute(FFT)
+    one_sided_magnitudes = 2.0*two_sided_magnitudes[:discrete_nyquist_cutoff+1]
+    averaged_one_sided_magnitudes = one_sided_magnitudes/float(num_samples)
+    ans = dict(zip([freq_res*i for i in xrange(num_samples)], averaged_one_sided_magnitudes))
+    return ans
 
 class Filter(object):
     
     def __init__(self, a0=list(), b0=list()): 
         self.a = numpy.array(a0, dtype=numpy.float64) # IIR Filter Coefficients
         self.b = numpy.array(b0, dtype=numpy.float64) # FIR Filter Coefficients
+    
+    def __init__(self, filter0): 
+        self.a = numpy.array(filter0.a)
+        self.b = numpy.array(filter0.b)
     
     def apply(self, input_signal):
         output_signal = scipy.signal.lfilter(self.b, self.a, input_signal, axis=0)
@@ -59,26 +78,18 @@ class FilterNetwork(object):
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
         return self.final_combiner.apply(output_signals_network[-1])
     
-    def mutate_combiner(self, layer_index0 = None, unit_index0 = None):
-        if self.get_num_layers() == 1: 
-            return
-        layer_index = random.randint(1,self.get_num_layers()-1) if layer_index0 == None else layer_index0
-        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
-        combiner = self.network[layer_index][unit_index][SIGNAL_COMBINER_INDEX]
-        num_weights = len(combiner.list_of_weights)
-        combiner.list_of_weights[random.randint(0,num_weights-1)] = random.uniform(0.0,1.0)
-    
-    def mutate_FIR(self, layer_index0 = None, unit_index0 = None):
-        layer_index = random.randint(0,self.get_num_layers()-1) if layer_index0 == None else layer_index0
-        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
-        filt = self.network[layer_index][unit_index][FILTER_INDEX]
-        num_coefficients = len(filt.b)
-        filt.b[random.randint(0,num_coefficients-1)] = random.uniform(0.0,1.0)
-    
-    def mutate_IIR(self, layer_index0 = None, unit_index0 = None):
-        layer_index = random.randint(0,self.get_num_layers()-1) if layer_index0 == None else layer_index0
-        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
-        filt = self.network[layer_index][unit_index][FILTER_INDEX]
-        num_coefficients = len(filt.a)
-        filt.a[random.randint(0,num_coefficients-1)] = random.uniform(0.0,1.0)
-    
+#class FilterNetworkGeneticAlgorithm(object):
+#    
+#    def __init__(self, population_size0=10, num_generations0=10, elite_percent0=0.8): 
+#        self.population_size = population_size0
+#        self.num_generations = num_generations0
+#        self.elite_percent = elite_percent0
+#        self.population = [FilterNetwork() for i in xrange(population_size)]
+#    
+#    def run_generation(self, num_generations_to_run=1):
+#        for generation_index in xrange(num_generations_to_run):
+#            # FIR Mutations
+#            # IIR Mutations
+#            # Combiner Mutations
+#            # Cross Over
+

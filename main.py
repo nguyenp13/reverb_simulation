@@ -62,10 +62,15 @@ def main():
     input_sample_rate, input_samples = scipy.io.wavfile.read(input_wav_location)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
-    fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
-    print fn.network[1][1][0].a
-    fn.mutate_IIR(1,1)
-    print fn.network[1][1][0].a
+#    fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
+#    print fn.network[1][1][0].a
+#    fn.mutate_IIR(1,1)
+#    print fn.network[1][1][0].a
+    
+    sine_wave = numpy.sin(numpy.array([45.*i for i in xrange(8)]) * numpy.pi / 180. )
+    sampling_freq = 8
+    freq_amps = get_freq_amplitudes(sine_wave, sampling_freq)
+    print freq_amps
     
 #    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
