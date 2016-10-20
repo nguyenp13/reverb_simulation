@@ -13,7 +13,7 @@ def get_freq_amplitudes(input_signal, sampling_freq):
     num_samples = len(input_signal)
     freq_res = float(sampling_freq) / num_samples
     nyquist_limit = sampling_freq/2.0 
-    discrete_nyquist_cutoff = int(math.floor(nyquist_limit))
+    discrete_nyquist_cutoff = int(math.floor(nyquist_limit/freq_res))
     FFT = numpy.fft.fft(input_signal)
     two_sided_magnitudes = numpy.absolute(FFT)
     one_sided_magnitudes = 2.0*two_sided_magnitudes[:discrete_nyquist_cutoff+1]
