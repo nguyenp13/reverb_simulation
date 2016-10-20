@@ -6,6 +6,7 @@ Data Driven Reverb Simulator
 
 TODO:
     Update usage()
+    Get crossover working
     Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
