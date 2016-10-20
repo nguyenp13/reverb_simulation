@@ -62,6 +62,9 @@ def main():
 #    input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
+    os.system('clear')
+    
+    
 #    bn=1
 #    b = numpy.ones(bn)/float(bn)
 #    an=10000
@@ -82,19 +85,19 @@ def main():
     
     fn = FilterNetwork(num_layers=2, num_units_per_layer=2, num_fir_coefficients=3, num_iir_coefficients=3)
     
-    fn.network[0][0][0].b = numpy.array([1,2,3], dtype='float')
-    fn.network[0][0][0].a = numpy.array([4,5,6], dtype='float')
+    fn.network[0][0][0].b = numpy.array([1.0,2.0,3.0], dtype='float')
+    fn.network[0][0][0].a = numpy.array([4.0,5.0,6.0], dtype='float')
     
-    fn.network[0][1][0].b = numpy.array([7,8,9], dtype='float')
-    fn.network[0][1][0].a = numpy.array([10,11,12], dtype='float')
+    fn.network[0][1][0].b = numpy.array([7.0,8.0,9.0], dtype='float')
+    fn.network[0][1][0].a = numpy.array([10.0,11.0,12.0], dtype='float')
     
-    fn.network[1][0][0].b = numpy.array([13,14,15], dtype='float')
-    fn.network[1][0][0].a = numpy.array([16,17,18], dtype='float')
+    fn.network[1][0][0].b = numpy.array([13.0,14.0,15.0], dtype='float')
+    fn.network[1][0][0].a = numpy.array([16.0,17.0,18.0], dtype='float')
     fn.network[1][0][1].list_of_weights = numpy.array([6,7], dtype='float')
     
-    fn.network[1][1][0].b = numpy.array([19,20,21], dtype='float')
-    fn.network[1][1][0].a = numpy.array([22,23,24], dtype='float')
-    fn.network[1][1][1].list_of_weights = numpy.array([8,9], dtype='float')
+    fn.network[1][1][0].b = numpy.array([19.0,20.0,21.0], dtype='float')
+    fn.network[1][1][0].a = numpy.array([22.0,23.0,24.0], dtype='float')
+    fn.network[1][1][1].list_of_weights = numpy.array([8.0,9.0], dtype='float')
     
     fn.final_combiner.list_of_weights = [1,1]
     
@@ -111,18 +114,40 @@ def main():
     
     l0u0_output = filt(l0u0_b,l0u0_a,input_samples)
     l0u1_output = filt(l0u1_b,l0u1_a,input_samples)
-    l1u0_output = filt(l0u0_b,l0u0_a,numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0))
+    x = numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0)
+#    print "Our Input's id"
+#    print id(x)
+#    print "Our Input"
+#    print x
+    l1u0_output = filt(l1u0_b,l1u0_a,x)
+#    print "Our output"
+#    print l1u0_output
+#    print "Out Output 4" # THE FILTERS AREN'T THE SAME ################################################################
+#    print (numpy.asarray(scipy.signal.lfilter(l0u0_b, l0u0_a, x, axis=0), dtype=numpy.int16))
+#    print "Out Output 3"
+#    print numpy.asarray(scipy.signal.lfilter(l1u0_b, l1u0_a, x, axis=0), dtype=numpy.int16)
+#    print "Our Fitler Output"
+#    f=Filter(l1u0_a, l1u0_b)
+#    print f.apply(x)
+#    print "Out Output 2"
+#    print numpy.asarray(scipy.signal.lfilter(l1u0_b, l1u0_a, x, axis=0), dtype=numpy.int16)
+#    print "Our Coefs"
+#    print l1u0_a
+#    print l1u0_b
 #    l1u0_output = filt(l0u0_b,l0u0_a,numpy.sum([weight*input_signal for input_signal, weight in zip([l0u0_output,l0u1_output],[6,7])],axis=0))
-    l1u1_output = filt(l0u1_b,l0u1_a,numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0))
+    l1u1_output = filt(l1u1_b,l1u1_a,numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0))
     
     output_code = fn.apply(input_samples)
     output_manual = l1u0_output+l1u1_output
     
+    print "\n"*2
+    print "Our Input"
+    print numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0)
+    print "Our Output"
+    print l1u1_output
 #    print input_samples
-    print "Our input"
-    print numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0)
-    print "Our output"
-    print l1u0_output
+#    print "Our input"
+#    print numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0)
 #    print output_code
 #    print fn.final_combiner.list_of_weights
 #    print fn.final_combiner.list_of_weights[0]*output_manual
