@@ -68,3 +68,17 @@ class FilterNetwork(object):
         num_weights = len(combiner.list_of_weights)
         combiner.list_of_weights[random.randint(0,num_weights-1)] = random.uniform(0.0,1.0)
     
+    def mutate_FIR(self, layer_index0 = None, unit_index0 = None):
+        layer_index = random.randint(0,self.get_num_layers()-1) if layer_index0 == None else layer_index0
+        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
+        filt = self.network[layer_index][unit_index][FILTER_INDEX]
+        num_coefficients = len(filt.b)
+        filt.b[random.randint(0,num_coefficients-1)] = random.uniform(0.0,1.0)
+    
+    def mutate_IIR(self, layer_index0 = None, unit_index0 = None):
+        layer_index = random.randint(0,self.get_num_layers()-1) if layer_index0 == None else layer_index0
+        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
+        filt = self.network[layer_index][unit_index][FILTER_INDEX]
+        num_coefficients = len(filt.a)
+        filt.a[random.randint(0,num_coefficients-1)] = random.uniform(0.0,1.0)
+    

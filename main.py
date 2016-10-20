@@ -6,7 +6,6 @@ Data Driven Reverb Simulator
 
 TODO:
     Update usage()
-    Currently working on FilterNetwork.self.mutate_combiner()
     Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
@@ -62,10 +61,10 @@ def main():
     input_sample_rate, input_samples = scipy.io.wavfile.read(input_wav_location)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
-#    fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
-#    print fn.network[1][1][1].list_of_weights
-#    fn.mutate_combiner(1,1)
-#    print fn.network[1][1][1].list_of_weights
+    fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
+    print fn.network[1][1][0].b
+    fn.mutate_FIR(1,1)
+    print fn.network[1][1][0].b
     
 #    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
