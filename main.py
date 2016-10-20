@@ -6,7 +6,7 @@ Data Driven Reverb Simulator
 
 TODO:
     Update usage()
-    Currently working on FilterNetwork.self.get_num_layers()
+    Currently working on FilterNetwork.self.mutate_combiner()
     Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
