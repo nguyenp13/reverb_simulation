@@ -67,7 +67,7 @@ def main():
 #    fn.mutate_IIR(1,1)
 #    print fn.network[1][1][0].a
     
-    num_samples = 26
+    num_samples = 31
     freq = 1 # full periods per second
     sampling_freq = 8 
     total_time = num_samples/sampling_freq
@@ -75,7 +75,8 @@ def main():
     total_num_degrees = total_num_cycles*360.0
     num_degrees_per_sample = total_num_degrees/float(num_samples)
     
-    sine_wave = numpy.sin(numpy.array([(num_degrees_per_sample)*i for i in xrange(num_samples)]) * numpy.pi / 180. )
+    sine_wave = numpy.sin(numpy.array([(num_degrees_per_sample)*i+50 for i in xrange(num_samples)]) * numpy.pi / 180. )
+    sine_wave = numpy.concatenate((sine_wave,[0]*(32-len(sine_wave))))
     freq_amps = get_freq_amplitudes(sine_wave, sampling_freq)
     def p(i):
         print i
