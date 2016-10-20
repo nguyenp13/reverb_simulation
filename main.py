@@ -6,6 +6,7 @@ Data Driven Reverb Simulator
 
 TODO:
     Update usage()
+    Currently working on FilterNetwork.self.get_num_layers()
     Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
@@ -59,72 +60,16 @@ def main():
     print 
     
     input_sample_rate, input_samples = scipy.io.wavfile.read(input_wav_location)
-#    input_samples = numpy.asarray(input_samples, dtype=numpy.int16)
     output_wav_location = os.path.join(out_dir,"output.wav")
     
-    os.system('clear')
+#    fn = FilterNetwork(num_layers=3, num_units_per_layer=3, num_fir_coefficients=3, num_iir_coefficients=3)
+#    print fn.network[1][1][1].list_of_weights
+#    fn.mutate_combiner(1,1)
+#    print fn.network[1][1][1].list_of_weights
     
+#    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
-#    bn=1
-#    b = numpy.ones(bn)/float(bn)
-#    an=10000
-#    a = numpy.zeros(an)
-#    a[0]=1
-#    a[an-1]=-0.5
-#    
-#    output_samples = numpy.asarray(scipy.signal.lfilter(b, a, input_samples, axis=0), dtype=numpy.int16)
-#    
-#    print input_samples[100:110]
-#    print output_samples[100:110]
-#    print output_samples[100:110]-input_samples[:10]
-#    
 #    scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
-#    
-#    print 
-#    print scipy.signal.lfilter(b, a, [1]+100*[0], axis=0)
-    
-    fn = FilterNetwork(num_layers=2, num_units_per_layer=2, num_fir_coefficients=3, num_iir_coefficients=3)
-    
-    fn.network[0][0][0].b = numpy.array([1.0,2.0,3.0], dtype='float')
-    fn.network[0][0][0].a = numpy.array([4.0,5.0,6.0], dtype='float')
-    
-    fn.network[0][1][0].b = numpy.array([7.0,8.0,9.0], dtype='float')
-    fn.network[0][1][0].a = numpy.array([10.0,11.0,12.0], dtype='float')
-    
-    fn.network[1][0][0].b = numpy.array([13.0,14.0,15.0], dtype='float')
-    fn.network[1][0][0].a = numpy.array([16.0,17.0,18.0], dtype='float')
-    fn.network[1][0][1].list_of_weights = numpy.array([6,7], dtype='float')
-    
-    fn.network[1][1][0].b = numpy.array([19.0,20.0,21.0], dtype='float')
-    fn.network[1][1][0].a = numpy.array([22.0,23.0,24.0], dtype='float')
-    fn.network[1][1][1].list_of_weights = numpy.array([8.0,9.0], dtype='float')
-    
-    fn.final_combiner.list_of_weights = [1,1]
-    
-    filt = lambda bb,aa,ss: numpy.asarray(scipy.signal.lfilter(bb, aa, ss, axis=0), dtype=numpy.int16)
-    
-    l0u0_b = fn.network[0][0][0].b
-    l0u0_a = fn.network[0][0][0].a
-    l0u1_b = fn.network[0][1][0].b
-    l0u1_a = fn.network[0][1][0].a
-    l1u0_b = fn.network[1][0][0].b
-    l1u0_a = fn.network[1][0][0].a
-    l1u1_b = fn.network[1][1][0].b
-    l1u1_a = fn.network[1][1][0].a
-    
-    l0u0_output = filt(l0u0_b,l0u0_a,input_samples)
-    l0u1_output = filt(l0u1_b,l0u1_a,input_samples)
-    l1u0_output = filt(l1u0_b,l1u0_a,numpy.sum([6.0*l0u0_output,7.0*l0u1_output],axis=0))
-    l1u1_output = filt(l1u1_b,l1u1_a,numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0))
-    
-    output_code = fn.apply(input_samples)
-    output_manual = l1u0_output+l1u1_output
-    
-    print "\n"*2
-    print "Our Input"
-    print numpy.sum([8.0*l0u0_output,9.0*l0u1_output],axis=0)
-    print "Our Output"
-    print l1u1_output
     
     print 
     print 'Total Run Time: '+str(time.time()-START_TIME) 

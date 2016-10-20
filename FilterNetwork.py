@@ -9,17 +9,17 @@ SIGNAL_COMBINER_INDEX=1
 class Filter(object):
     
     def __init__(self, a0=list(), b0=list()): 
-        self.a = a0
-        self.b = b0
+        self.a = numpy.array(a0, dtype=numpy.float64) # IIR Filter Coefficients
+        self.b = numpy.array(b0, dtype=numpy.float64) # FIR Filter Coefficients
     
     def apply(self, input_signal):
-        output_signal = numpy.asarray(scipy.signal.lfilter(self.b, self.a, input_signal, axis=0), dtype=numpy.int16)
+        output_signal = scipy.signal.lfilter(self.b, self.a, input_signal, axis=0)
         return output_signal
     
 class SignalCombiner(object):
     
     def __init__(self, list_of_weights0): 
-        self.list_of_weights=list_of_weights0
+        self.list_of_weights=numpy.array(list_of_weights0, dtype=numpy.float64)
 
     def apply(self, list_of_input_signals): 
         output_signal = numpy.sum([weight*input_signal for input_signal, weight in zip(list_of_input_signals,self.list_of_weights)], axis=0)
@@ -34,7 +34,7 @@ class FilterNetwork(object):
                             [
                                 (
                                     Filter([random.uniform(-1.0,1.0) for i in xrange(num_fir_coefficients)],[random.uniform(-1.0,1.0) for i in xrange(num_iir_coefficients)]), 
-                                    None if layer_index==0 else SignalCombiner([random.uniform(0,1) for i in xrange(num_units_per_layer)])
+                                    None if layer_index==0 else SignalCombiner([random.uniform(0.0,1.0) for i in xrange(num_units_per_layer)])
                                 )
                                 for unit_index in xrange(num_units_per_layer)
                             ] 
@@ -56,14 +56,15 @@ class FilterNetwork(object):
                     current_input_signal = input_signal
                 else:
                     current_input_signal = unit[SIGNAL_COMBINER_INDEX].apply(output_signals_network[layer_index-1])
-                    if layer_index==1 and unit_index==1:
-                        def p(i):
-                            print i
-                            return i
-                        print "Code's Input"
-                        print current_input_signal
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
-        print "Code's output"
-        print output_signals_network[1][1]
         return self.final_combiner.apply(output_signals_network[-1])
+    
+    def mutate_combiner(self, layer_index0 = None, unit_index0 = None):
+        if self.get_num_layers() == 1: 
+            return
+        layer_index = random.randint(1,self.get_num_layers()-1) if layer_index0 == None else layer_index0
+        unit_index = random.randint(0,self.get_num_units_per_layer()-1) if unit_index0 == None else unit_index0
+        combiner = self.network[layer_index][unit_index][SIGNAL_COMBINER_INDEX]
+        num_weights = len(combiner.list_of_weights)
+        combiner.list_of_weights[random.randint(0,num_weights-1)] = random.uniform(0.0,1.0)
     
