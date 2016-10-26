@@ -67,7 +67,7 @@ def main():
 #    fn.mutate_IIR(1,1)
 #    print fn.network[1][1][0].a
     
-    num_samples = 40
+    num_samples = 441000
     freq = 1 # full periods per second
     sampling_freq = 8 
     total_time = num_samples/sampling_freq
@@ -75,13 +75,20 @@ def main():
     total_num_degrees = total_num_cycles*360.0
     num_degrees_per_sample = total_num_degrees/float(num_samples)
     
-    sine_wave = numpy.sin(numpy.array([(num_degrees_per_sample)*i+50 for i in xrange(num_samples)]) * numpy.pi / 180. )
-#    sine_wave = numpy.concatenate((sine_wave,[0]*(32-len(sine_wave))))
-    freq_amps = get_freq_amplitudes(sine_wave, sampling_freq)
+    phase_offset=0
+    sine_wave_1_hz = numpy.sin(numpy.array([(num_degrees_per_sample)*i+phase_offset for i in xrange(num_samples)]) * numpy.pi / 180. )
+    sine_wave_2_hz = numpy.sin(2.0*numpy.array([(num_degrees_per_sample)*i+phase_offset for i in xrange(num_samples)]) * numpy.pi / 180. )
+#    sine_wave_2_hz = sine_wave_1_hz
     def p(i):
         print i
-#        return i
-    print [p(e) for e in freq_amps.items() if e[1]>1e-15 or True]
+        return i
+    
+    numpy.set_printoptions(suppress=True)    
+    print get_csd(sine_wave_1_hz, sine_wave_2_hz,sampling_freq)[1]
+    print get_csd(sine_wave_1_hz, sine_wave_1_hz+sine_wave_2_hz,sampling_freq)[1]
+    print get_csd(sine_wave_1_hz, sine_wave_1_hz,sampling_freq)[1]
+    print get_csd(sine_wave_1_hz+sine_wave_2_hz, sine_wave_1_hz+sine_wave_2_hz,sampling_freq)[1]
+    print get_csd(sine_wave_2_hz, sine_wave_2_hz,sampling_freq)[1]
     
 #    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
