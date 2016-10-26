@@ -31,6 +31,24 @@ def get_csd(signal_a, signal_b, sample_rate):
         axis=-1)
     return ans # might have complex values, but they should all be zero since all of our input signals are real-valued
 
+def get_signal_similarity(signal_a, signal_b, sample_rate):
+    samples_per_segment = sample_rate#/10 # sample_rate times x makes each segment x seconds
+    samples_per_segment = samples_per_segment if samples_per_segment%2==0 else samples_per_segment+1 # to make sure it's odd as the tukey window needs an odd number of samples
+    csd = scipy.signal.csd(
+        signal_a, 
+        signal_b, 
+        sample_rate, 
+        window=scipy.signal.get_window(('tukey',0.5),samples_per_segment), #Using a tukey window so that it only diminishes volume near the ends of the segment
+        nperseg=samples_per_segment,
+        noverlap=None, # we set this to None so that it defauls to nperseg/2
+        nfft=None, # we set this to None so that it defaults to using nperseg
+        detrend='constant', # to remove DC offset
+        return_onesided=True, # to remove aliasing above nyquist limit
+        scaling='density', # doesn't matter for our purposes since we only care about these values relative to each other
+        axis=-1) # might have complex values, but they should all be zero since all of our input signals are real-valued
+    score = numpy.sum(numpy.square(csd)[1]) 
+    return score
+
 class Filter(object):
     
     def __init__(self, a0=list(), b0=list()): 

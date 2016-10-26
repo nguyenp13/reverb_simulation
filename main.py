@@ -90,6 +90,8 @@ def main():
     print get_csd(sine_wave_1_hz+sine_wave_2_hz, sine_wave_1_hz+sine_wave_2_hz,sampling_freq)[1]
     print get_csd(sine_wave_2_hz, sine_wave_2_hz,sampling_freq)[1]
     
+    print get_signal_similarity(sine_wave_2_hz, sine_wave_2_hz,sampling_freq)
+    
 #    output_samples = numpy.asarray(filt.apply(input_samples), dtype=numpy.int16)
     
 #    scipy.io.wavfile.write(output_wav_location, input_sample_rate, output_samples)
