@@ -3,6 +3,7 @@
 import scipy.signal
 import numpy
 import math
+import copy
 from util import *
 
 FILTER_INDEX=0
@@ -46,7 +47,7 @@ class SignalCombiner(object):
         self.list_of_weights=numpy.array(list_of_weights0, dtype=numpy.float64)
 
     def apply(self, list_of_input_signals): 
-        output_signal = numpy.sum([weight*input_signal for input_signal, weight in zip(list_of_input_signals,self.list_of_weights)], axis=0)
+        output_signal = numpy.sum([weight*input_signal for input_signal, weight in zip(list_of_input_signals, self.list_of_weights)], axis=0)
         return output_signal
 
 class FilterNetwork(object):
@@ -57,7 +58,7 @@ class FilterNetwork(object):
                         [
                             [
                                 (
-                                    Filter([random.uniform(-1.0,1.0) for i in xrange(num_fir_coefficients)],[random.uniform(-1.0,1.0) for i in xrange(num_iir_coefficients)]), 
+                                    Filter([random.uniform(-1.0,1.0) for i in xrange(num_iir_coefficients)],[random.uniform(-1.0,1.0) for i in xrange(num_fir_coefficients)]), 
                                     None if layer_index==0 else SignalCombiner([random.uniform(0.0,1.0) for i in xrange(num_units_per_layer)])
                                 )
                                 for unit_index in xrange(num_units_per_layer)
@@ -65,6 +66,9 @@ class FilterNetwork(object):
                             for layer_index in xrange(num_layers)
                         ]
         self.final_combiner = SignalCombiner([random.uniform(0,1) for i in xrange(num_units_per_layer)])
+    
+    def get_clone(self):
+        return copy.deepcopy(self)
     
     def get_num_layers(self):
         return len(self.network)
@@ -83,14 +87,81 @@ class FilterNetwork(object):
                 output_signals_network[layer_index][unit_index] = unit[FILTER_INDEX].apply(current_input_signal)
         return self.final_combiner.apply(output_signals_network[-1])
     
-#class FilterNetworkGeneticAlgorithm(object):
-#    
-#    def __init__(self, population_size0=10, num_generations0=10, elite_percent0=0.8): 
-#        self.population_size = population_size0
-#        self.num_generations = num_generations0
-#        self.elite_percent = elite_percent0
-#        self.population = [FilterNetwork() for i in xrange(population_size)]
-#    
+class FilterNetworkGeneticAlgorithm(object):
+    
+    def __init__(self, population_size0=10, num_generations0=10, elite_percent0=0.8, num_layers0=3, num_units_per_layer0=3, num_fir_coefficients0=100, num_iir_coefficients0=100, training_set_directory='./training_set'): 
+        self.population_size = population_size0 
+        self.num_generations = num_generations0 
+        self.elite_percent = elite_percent0 
+        self.population = [FilterNetwork(num_layers=num_layers0, num_units_per_layer=num_units_per_layer0, num_fir_coefficients=num_fir_coefficients0, num_iir_coefficients=num_iir_coefficients0) for i in xrange(population_size)] 
+        list_of_wav_file_names = [e for e in os.listdir(training_set_directory) if '.wav'==e[-4:]] 
+        # our files will have names "in_[index]" and "out_[index]" 
+        self.training_data = [] 
+        for input_wav_file_name in [e for e in list_of_wav_file_names if 'in_'==e[:3]]:
+            output_wav_file_name = input_wav_file_name.replace('in_','out_')
+            if output_wav_file_name in list_of_wav_file_names:
+                self.training_data.append((input_wav_file_name,output_wav_file_name))
+    
+    def mutate_combiner(fn0):
+        # Returns mutated filter network
+        # Picks a random unit
+        # Changes only one weight
+        fn = fn0.get_clone()
+        num_layers = fn.get_num_layers()
+        num_units_per_layer = fn.get_num_units_per_layer()
+        layer_index = random.randint(0,num_layers-1)
+        unit_index = random.randint(0,num_units_per_layer-1)
+        unit = fn.network[layer_index][unit_index]
+        # Mutate Signal Combiner
+        num_weights = len(unit[SIGNAL_COMBINER_INDEX].list_of_weights)
+        if unit[SIGNAL_COMBINER_INDEX] is not None:
+            unit[SIGNAL_COMBINER_INDEX].list_of_weights[random.randint(0,num_weights-1)]=random.uniform(0.0,1.0)
+        return fn
+    
+    def mutate_IIR(fn0):
+        # Returns mutated filter network
+        # Picks a random unit
+        # Changes all IIR coefficients
+        fn = fn0.get_clone()
+        num_layers = fn.get_num_layers()
+        num_units_per_layer = fn.get_num_units_per_layer()
+        layer_index = random.randint(0,num_layers-1)
+        unit_index = random.randint(0,num_units_per_layer-1)
+        unit = fn.network[layer_index][unit_index]
+        # Mutate IIR
+        num_iir_coefficients = len(unit[FILTER_INDEX].a)
+        unit[FILTER_INDEX].a=numpy.array([random.uniform(-1.0,1.0) for i in xrange(num_iir_coefficients)], dtype=numpy.float64)
+        return fn
+    
+    def mutate_FIR(fn0):
+        # Returns mutated filter network
+        # Picks a random unit
+        # Changes all the FIR coefficients.
+        fn = fn0.get_clone()
+        num_layers = fn.get_num_layers()
+        num_units_per_layer = fn.get_num_units_per_layer()
+        layer_index = random.randint(0,num_layers-1)
+        unit_index = random.randint(0,num_units_per_layer-1)
+        unit = fn.network[layer_index][unit_index]
+        # Mutate IIR
+        num_fir_coefficients = len(unit[FILTER_INDEX].b)
+        unit[FILTER_INDEX].b=numpy.array([random.uniform(-1.0,1.0) for i in xrange(num_fir_coefficients)], dtype=numpy.float64)
+        return fn
+    
+    def crossover(fn1,fn2):
+        # Creates a new filter network with a 50% probability of each unit coming from either parent
+        num_layers0 = fn1.get_num_layers()
+        num_units_per_layer0 = fn1.get_num_units_per_layer()
+        num_iir_coefficients0 = len(fn1.network[0][0][FILTER_INDEX].a)
+        num_fir_coefficients0 = len(fn1.network[0][0][FILTER_INDEX].b)
+        child = FilterNetwork(num_layers=num_layers0, num_units_per_layer=num_units_per_layer0, num_fir_coefficients=num_fir_coefficients0, num_iir_coefficients=num_iir_coefficients0)
+        for layer_index in xrange(num_layers0):
+            for unit_index in xrange(num_units_per_layer0):
+                parent = fn1 if random.randint(0,1)==0 else fn2
+                child.network[layer_index][unit_index][SIGNAL_COMBINER_INDEX].list_of_weights = numpy.array(parent.network[layer_index][unit_index][SIGNAL_COMBINER_INDEX].list_of_weights, dtype=numpy.float64)
+                child.network[layer_index][unit_index][FILTER_INDEX] = Filter(parent.network[layer_index][unit_index][FILTER_INDEX])
+        return child
+    
 #    def run_generation(self, num_generations_to_run=1):
 #        for generation_index in xrange(num_generations_to_run):
 #            # FIR Mutations
