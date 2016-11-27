@@ -5,9 +5,13 @@
 Data Driven Reverb Simulator
 
 TODO:
-    Update usage()
-    Get crossover working
-    Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
+    Filter GA
+        get some test samples so we can make sure it's working
+    Filter Network GA
+        write a greedy search first
+        test run_generation
+        Update usage()
+        Read http://www.eas.uccs.edu/~mwickert/ece2610/lecture_notes/ece2610_chap8.pdf on how to solve for coefficients
 
 """
 
