@@ -18,7 +18,6 @@ Sections:
 # Imports #
 ###########
 
-import json
 import datetime
 import random
 import matplotlib.cm
