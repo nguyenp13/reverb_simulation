@@ -15,7 +15,7 @@ The following tools were heavily utilized to create this visualization:
 * [Pandas](https://pandas.pydata.org/)
 * [Pandarallel](https://github.com/nalepae/pandarallel)
 
-We also used [matplotlib]([https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html)), [datetime](https://docs.python.org/3/library/datetime.html), [numpy](https://numpy.org/), and [multiprocessing](https://docs.python.org/3/library/multiprocessing.html).
+We also used [matplotlib](https://matplotlib.org/3.1.1/api/_as_gen/matplotlib.pyplot.xlim.html), [datetime](https://docs.python.org/3/library/datetime.html), [numpy](https://numpy.org/), and [multiprocessing](https://docs.python.org/3/library/multiprocessing.html).
 
 ### Usage
 
