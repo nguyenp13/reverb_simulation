@@ -35,7 +35,8 @@ import bokeh.tile_providers
 ###########
 
 pandarallel.initialize(nb_workers=mp.cpu_count(), progress_bar=False, verbose=0)
-OUTPUT_HTML_FILE = 'caribou.html'
+
+OUTPUT_HTML_FILE = './docs/caribou.html'
 
 # https://www.kaggle.com/jessemostipak/caribou-location-tracking
 LOCATIONS_CSV_FILE = './data/locations.csv'
