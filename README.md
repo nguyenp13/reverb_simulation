@@ -4,7 +4,7 @@ This is a visualization tracking the location of 260 woodland caribou in norther
 
 More information about the raw data can be found  [here](https://www.kaggle.com/jessemostipak/caribou-location-tracking).
 
-A live demo can be found [here](http://paul-tqh-nguyen.github.io/caribou_location_tracking/).
+A live demo can be found at http://paul-tqh-nguyen.github.io/caribou_location_tracking/.
 
 Feel free to  [reach out](https://paul-tqh-nguyen.github.io/about/#contact)  for help or report problems or make suggestions for improvement!
 
