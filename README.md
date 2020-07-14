@@ -1,5 +1,4 @@
-# Reverb Simulation
+# Caribou Location Tracking Visualization
 
-Data Driven Reverb Simulator
+Visualization of 260 woodland caribou movement in northern British Columbia.
 
-This is a personal side project that I honestly don't much time to work on anymore :/
