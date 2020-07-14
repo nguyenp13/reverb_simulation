@@ -4,7 +4,7 @@ const onlyOne = (iterable) => {
     return iterable[0];
 };
 
-const timerPeriod = 25;
+const timerPeriod = 500;
 
 const main = (dateSlider, timerBox) => {
     const playButtonDiv = onlyOne(document.getElementsByClassName('play-pause-button'));
