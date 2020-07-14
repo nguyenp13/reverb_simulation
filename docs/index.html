@@ -4,8 +4,52 @@
     <meta charset="utf-8">
     <title>Caribou Location Tracking</title>
     <link rel="stylesheet" type="text/css" href="./index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
+    <a id="toggle-help-button" onclick="document.getElementById('help-display').classList.toggle('show')"><i class="fa">&#xf059;</i></a>
+    <div id="help-display">
+      <div id="help-display-text-container">
+	<div id="help-display-text">
+	  <h3>Caribou Location Tracking</h3>
+	  <p>
+	    This is a visualization tracking the location of 260 woodland caribou in northern British Columbia from 1988 to 2016. 
+	  </p>
+	  <p>
+	    The data can be found <a target="_blank" href="https://www.kaggle.com/jessemostipak/caribou-location-tracking">here</a>.
+	  </p>
+	  <p>
+	    The source code can be found <a target="_blank" href="https://github.com/paul-tqh-nguyen/caribou_location_tracking_visualization">here</a>.
+	  </p>
+	  <p>
+	    Feel free to reach out for help or report problems or make suggestions for improvement!
+	  </p>
+	  <h3>Usage</h3>
+	  <p>
+	    Use the slider to select a date. The locations of the caribou on this date will be shown on the map. 
+	  </p>
+	  <p>
+	    The caribou will be shown as colored dots on the map. 
+	  </p>
+	  <p>
+	    Hover over the dots to get information about the caribou. 
+	  </p>
+	  <p>
+	    Dragging the slider may change dates in larger increments than desired, so using the "Previous Date" and "Next Date" buttons may be useful here. 
+	  </p>
+	  <p>
+	    The colored lines correspond to the paths of the caribou (though the caribou may not necessarily be present on the selected date). 
+	  </p>
+	  <p>
+	    Use the "Play" button to have the date slider automatically progress the date forward in time. 
+	  </p>
+	  <p>
+	    There are utilities near the upper right corner of the map that to pan, box zoom, scroll zoom, and reset the zoom level.
+	  </p>
+	  <a onclick="document.getElementById('help-display').classList.toggle('show')">Back to Map</a>
+	  </div>
+      </div>
+    </div>
     <div id="caribou-chart">
       <iframe src="./caribou.html"
       	      sandbox="allow-same-origin allow-scripts"

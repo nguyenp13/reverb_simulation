@@ -1,5 +1,4 @@
 
-const implies = (antecedent, consequent) => (!antecedent) || consequent;
 const onlyOne = (iterable) => {
     console.assert(iterable.length == 1);
     return iterable[0];
