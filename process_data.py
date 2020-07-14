@@ -1,17 +1,24 @@
-#!/usr/bin/python3
-'#!/usr/bin/python3 -OO'
+#!/usr/bin/python3 -OO
 
 '''
-'''
 
-# @todo update doc string
+This file contains functionality for processing our raw data and generating the HTML files visualizing the processed data. 
+
+Sections:
+* Imports
+* Globals
+* Application Specific Utilities
+* Data Processing
+* Visualization
+* Driver
+
+'''
 
 ###########
 # Imports #
 ###########
 
 import json
-import tqdm
 import datetime
 import random
 import matplotlib.cm
@@ -19,7 +26,6 @@ import pandas as pd
 import numpy as np
 import multiprocessing as mp
 from pandarallel import pandarallel
-from typing import Tuple
 
 from misc_utilities import *
 
@@ -27,8 +33,6 @@ import bokeh.layouts
 import bokeh.plotting
 import bokeh.models
 import bokeh.tile_providers
-
-# @todo update these imports
 
 ###########
 # Globals #

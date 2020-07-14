@@ -1,8 +1,6 @@
 name: caribou
 dependencies:
   - python=3.7
-  - pytorch
-  - tqdm
   - pandas
   - numpy
   - matplotlib
