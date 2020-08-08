@@ -6,7 +6,7 @@ More information about the raw data can be found  [here](https://www.kaggle.com/
 
 A live demo can be found at http://paul-tqh-nguyen.github.io/caribou_location_tracking/.
 
-Feel free to  [reach out](https://paul-tqh-nguyen.github.io/about/#contact)  for help or report problems or make suggestions for improvement!
+Feel free to  [reach out](https://paul-tqh-nguyen.github.io/about/#contact) for help or to report problems or make suggestions for improvement!
 
 ### Tools Used
 
